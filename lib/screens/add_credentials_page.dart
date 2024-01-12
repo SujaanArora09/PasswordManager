@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:passwordmanager/database/credentials.dart';
+import 'package:passwordmanager/theme/colors.dart';
 
 class AddCredentialsPage extends StatefulWidget {
   const AddCredentialsPage({super.key});
@@ -36,7 +37,7 @@ class _AddCredentialsPageState extends State<AddCredentialsPage> {
           totpController.text.trim(),
           notesController.text,
           uriController.text.trim(),
-          folderIdController.text.trim().isEmpty ? "Default" : folderIdController.text.trim(),
+          folderIdController.text.trim().isEmpty ? "All" : folderIdController.text.trim(),
           now,
           now,
           favourite,
@@ -72,12 +73,31 @@ class _AddCredentialsPageState extends State<AddCredentialsPage> {
             Theme.of(context).appBarTheme.systemOverlayStyle!.systemNavigationBarIconBrightness,
       ),
       child: Scaffold(
-        floatingActionButton: FloatingActionButton(
-          onPressed: saveAndExit,
-          child: const Icon(
-            Icons.check_rounded,
-            color: Colors.white,
-          ),
+
+        floatingActionButton: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            FloatingActionButton.extended(
+              foregroundColor: Theme.of(context).primaryTextTheme.bodySmall?.color,
+              backgroundColor: Theme.of(context).floatingActionButtonTheme.backgroundColor,
+              onPressed: () {
+                Navigator.pop(context);
+              },
+              label: const Text("Cancel"),
+              icon: const Icon(Icons.clear_rounded),
+            ),
+            SizedBox(
+              width: 10,
+            ),
+            FloatingActionButton(
+              backgroundColor: Theme.of(context).floatingActionButtonTheme.backgroundColor,
+              onPressed: saveAndExit,
+              child: Icon(
+                Icons.check_rounded,
+                color: Theme.of(context).primaryTextTheme.bodySmall?.color,
+              ),
+            ),
+          ],
         ),
         body: SingleChildScrollView(
           child: SafeArea(
@@ -294,7 +314,7 @@ class _AddCredentialsPageState extends State<AddCredentialsPage> {
                       ),
                       style: Theme.of(context).primaryTextTheme.bodyMedium!.copyWith(fontSize: 16),
                     ),
-                    const SizedBox(height: 24),
+                    const SizedBox(height: 100),
                   ],
                 ),
               ),

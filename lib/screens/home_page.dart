@@ -4,7 +4,9 @@ import 'package:hive_flutter/hive_flutter.dart';
 import 'package:passwordmanager/components/credentials_card.dart';
 import 'package:passwordmanager/database/credentials.dart';
 import 'package:passwordmanager/screens/add_credentials_page.dart';
+import 'package:passwordmanager/screens/local_auth_page.dart';
 import 'package:passwordmanager/screens/settings_page.dart';
+import 'package:passwordmanager/theme/colors.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -14,7 +16,7 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  String selectedFolderId = 'Default';
+  String selectedFolderId = 'All';
   final searchController = TextEditingController();
 
   @override
@@ -29,6 +31,7 @@ class _HomePageState extends State<HomePage> {
       ),
       child: Scaffold(
         floatingActionButton: FloatingActionButton(
+          backgroundColor: Theme.of(context).floatingActionButtonTheme.backgroundColor,
           onPressed: () async {
             await Navigator.push(
               context,
@@ -37,9 +40,9 @@ class _HomePageState extends State<HomePage> {
               ),
             );
           },
-          child: const Icon(
+          child: Icon(
             Icons.add_rounded,
-            color: Colors.white,
+            color: Theme.of(context).primaryTextTheme.bodySmall?.color,
           ),
         ),
         body: SafeArea(
@@ -50,30 +53,56 @@ class _HomePageState extends State<HomePage> {
               children: [
                 Row(
                   children: [
-                    const CircleAvatar(
-                      radius: 16,
-                      foregroundImage: AssetImage('assets/images/heckpass.png'),
-                      backgroundColor: Colors.transparent,
+                    GestureDetector(
+                      onTap: () async {
+                        await Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const LocalAuthPage(),
+                          ),
+                        );
+                      },
+                      child: Icon(
+                              Icons.fingerprint_rounded,
+                              color: Theme.of(context).primaryTextTheme.headlineMedium?.color,
+                              size: 30,
+                             ),
                     ),
                     const SizedBox(width: 8),
                     Expanded(
                       child: Text(
-                        'HeckPass',
+                        'PassWords',
                         style: Theme.of(context).primaryTextTheme.headlineMedium,
                         textAlign: TextAlign.start,
+
                       ),
                     ),
                     IconButton(
                       onPressed: () {
                         Navigator.push(
                           context,
-                          MaterialPageRoute(
-                            builder: (context) => const SettingsPage(),
+                          PageRouteBuilder(
+                            pageBuilder: (context, animation, secondaryAnimation) => const SettingsPage(),
+                            transitionsBuilder: (context, animation, secondaryAnimation, child) {
+                              const begin = Offset(1.0, 0.0);
+                              const end = Offset.zero;
+                              const curve = Curves.easeInOut;
+
+                              var tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
+
+                              var offsetAnimation = animation.drive(tween);
+
+                              return SlideTransition(
+                                position: offsetAnimation,
+                                child: child,
+                              );
+                            },
                           ),
                         );
                       },
-                      icon: const Icon(Icons.settings_rounded),
+                      icon: const Icon(Icons.settings_rounded, size: 30),
                     ),
+
                   ],
                 ),
                 const SizedBox(height: 24),
@@ -118,7 +147,7 @@ class _HomePageState extends State<HomePage> {
                         builder: (context, _, __) {
                           Set<String?> folders =
                               Hive.box<Credentials>(credentialsBoxName).values.map((e) => e.folderId).toSet();
-                          if (folders.isEmpty) folders.add("Default");
+                          if (folders.isEmpty) folders.add("All");
                           List<Widget> tabs = folders.map((e) => Tab(text: e)).toList();
                           return DefaultTabController(
                             length: folders.length,
@@ -128,7 +157,7 @@ class _HomePageState extends State<HomePage> {
                               tabAlignment: TabAlignment.start,
                               onTap: (value) {
                                 setState(() {
-                                  selectedFolderId = folders.elementAt(value) ?? 'Default';
+                                  selectedFolderId = folders.elementAt(value) ?? 'All';
                                 });
                               },
                             ),
@@ -155,7 +184,7 @@ class _HomePageState extends State<HomePage> {
                       sortedValues = sortedValues
                           .where((cred) => cred.name.toLowerCase().contains(searchController.text.trim().toLowerCase()))
                           .toList();
-                      if (selectedFolderId != "Default") {
+                      if (selectedFolderId != "All") {
                         sortedValues = sortedValues.where((cred) => cred.folderId == selectedFolderId).toList();
                       }
 

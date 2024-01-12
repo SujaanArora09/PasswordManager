@@ -1,52 +1,1 @@
-import 'dart:convert';
-
-import 'package:flutter/material.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-import 'package:hive_flutter/hive_flutter.dart';
-import 'package:passwordmanager/database/credentials.dart';
-import 'package:passwordmanager/screens/home_page.dart';
-import 'package:passwordmanager/screens/local_auth_page.dart';
-import 'package:passwordmanager/theme/themes.dart';
-
-void main() async {
-  await Hive.initFlutter();
-  Hive.registerAdapter<Credentials>(CredentialsAdapter());
-
-  const secureStorage = FlutterSecureStorage();
-  final key = await secureStorage.read(key: 'encryption-key');
-  if (key == null) {
-    await secureStorage.write(key: 'encryption-key', value: base64UrlEncode(Hive.generateSecureKey()));
-  }
-
-  final encodedKeyStr = await secureStorage.read(key: 'encryption-key');
-  final encryptionKey = base64Url.decode(encodedKeyStr!);
-
-  await Hive.openBox<Credentials>(credentialsBoxName, encryptionCipher: HiveAesCipher(encryptionKey));
-  await Hive.openBox<bool>('folders').then((value) => Hive.box<bool>('folders').put("change", true));
-
-  await Hive.openBox<bool>('preferences');
-  bool isLocalAuthOn = Hive.box<bool>('preferences').get('localAuthState', defaultValue: false)!;
-
-  runApp(
-    MaterialApp(
-      debugShowCheckedModeBanner: false,
-      title: 'Heck-Pass',
-      theme: lightTheme(),
-      darkTheme: darkTheme(),
-      themeMode: ThemeMode.system,
-      home: Root(
-        isLocalAuthOn: isLocalAuthOn,
-      ),
-    ),
-  );
-}
-
-class Root extends StatelessWidget {
-  final bool isLocalAuthOn;
-  const Root({super.key, required this.isLocalAuthOn});
-
-  @override
-  Widget build(BuildContext context) {
-    return isLocalAuthOn ? const LocalAuthPage() : const HomePage();
-  }
-}
+import 'dart:convert';import 'package:flutter/material.dart';import 'package:flutter_secure_storage/flutter_secure_storage.dart';import 'package:hive_flutter/hive_flutter.dart';import 'package:passwordmanager/database/credentials.dart';import 'package:passwordmanager/screens/home_page.dart';import 'package:passwordmanager/screens/local_auth_page.dart';import 'package:passwordmanager/theme/themes.dart';import 'package:passwordmanager/theme/theme_provider.dart';import 'package:provider/provider.dart'; // Import your ThemeProvidervoid main() async {  await Hive.initFlutter();  Hive.registerAdapter<Credentials>(CredentialsAdapter());  const secureStorage = FlutterSecureStorage();  final key = await secureStorage.read(key: 'encryption-key');  if (key == null) {    await secureStorage.write(key: 'encryption-key', value: base64UrlEncode(Hive.generateSecureKey()));  }  final encodedKeyStr = await secureStorage.read(key: 'encryption-key');  final encryptionKey = base64Url.decode(encodedKeyStr!);  await Hive.openBox<Credentials>(credentialsBoxName, encryptionCipher: HiveAesCipher(encryptionKey));  await Hive.openBox<bool>('folders').then((value) => Hive.box<bool>('folders').put("change", true));  await Hive.openBox<bool>('preferences');  bool isLocalAuthOn = Hive.box<bool>('preferences').get('localAuthState', defaultValue: false)!;  runApp(    ChangeNotifierProvider(      create: (_) => ThemeProvider(), // Provide ThemeProvider      child: MyApp(isLocalAuthOn: isLocalAuthOn),    ),  );}class MyApp extends StatelessWidget {  final bool isLocalAuthOn;  const MyApp({Key? key, required this.isLocalAuthOn}) : super(key: key);  @override  Widget build(BuildContext context) {    return MaterialApp(      debugShowCheckedModeBanner: false,      title: 'Final-Year-Project',      theme: context.watch<ThemeProvider>().themeData, // Use the theme from ThemeProvider      home: Root(isLocalAuthOn: isLocalAuthOn),    );  }}class Root extends StatelessWidget {  final bool isLocalAuthOn;  const Root({Key? key, required this.isLocalAuthOn}) : super(key: key);  @override  Widget build(BuildContext context) {    return isLocalAuthOn        ? const LocalAuthPage()        : Consumer<ThemeProvider>(      builder: (context, themeProvider, child) {        return Theme(          data: themeProvider.themeData,          child: const HomePage(),        );      },    );  }}

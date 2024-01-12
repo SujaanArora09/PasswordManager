@@ -50,7 +50,7 @@ class _ViewCredentialsPageState extends State<ViewCredentialsPage> {
           totpController.text.trim(),
           notesController.text,
           uriController.text.trim(),
-          folderIdController.text.trim().isEmpty ? "Default" : folderIdController.text.trim(),
+          folderIdController.text.trim().isEmpty ? "All" : folderIdController.text.trim(),
           creationDate,
           revisionDate,
           favourite,
@@ -72,7 +72,7 @@ class _ViewCredentialsPageState extends State<ViewCredentialsPage> {
     uriController.text = widget.credentials.uri ?? '';
     creationDate = widget.credentials.creationDate;
     revisionDate = widget.credentials.revisionDate;
-    folderIdController.text = widget.credentials.folderId ?? "Default";
+    folderIdController.text = widget.credentials.folderId ?? "All";
     favourite = widget.credentials.favourite;
   }
 
@@ -112,16 +112,16 @@ class _ViewCredentialsPageState extends State<ViewCredentialsPage> {
                     isEditing = true;
                   });
                 },
-                child: const Icon(
+                child: Icon(
                   Icons.edit_note_rounded,
-                  color: Colors.white,
+                  color: Theme.of(context).primaryTextTheme.bodySmall?.color,
                 ),
               )
             : FloatingActionButton(
                 onPressed: saveAndExit,
-                child: const Icon(
+                child: Icon(
                   Icons.check_rounded,
-                  color: Colors.white,
+                  color: Theme.of(context).primaryTextTheme.bodySmall?.color,
                 ),
               ),
         body: SingleChildScrollView(

@@ -30,7 +30,7 @@ ThemeData lightTheme() {
       backgroundColor: LightThemeColors.sideMenuBackgroundColor,
     ),
     floatingActionButtonTheme: FloatingActionButtonThemeData(
-      backgroundColor: LightThemeColors.primaryButtonColor,
+      backgroundColor: LightThemeColors.floatingActionColor,
     ),
     dialogBackgroundColor: LightThemeColors.backgroundColor,
     primaryTextTheme: TextTheme(
@@ -86,7 +86,7 @@ ThemeData darkTheme() {
       backgroundColor: DarkThemeColors.cardColor,
     ),
     floatingActionButtonTheme: FloatingActionButtonThemeData(
-      backgroundColor: DarkThemeColors.primaryButtonColor,
+      backgroundColor: DarkThemeColors.floatingActionColor,
     ),
     primaryTextTheme: TextTheme(
       bodyMedium: TextStyle(
@@ -110,3 +110,4 @@ ThemeData darkTheme() {
     ),
   );
 }
+

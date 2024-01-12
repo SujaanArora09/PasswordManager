@@ -23,6 +23,8 @@ dependencies:
   local_auth: ^2.1.7
   file_picker: ^6.1.1
   device_info_plus: ^9.1.1
+  lottie: ^3.1.0
+  provider:
 
 dev_dependencies:
   flutter_test:
@@ -43,6 +45,8 @@ flutter:
 
   assets:
     - assets/images/heckpass.png
+    - assets/animation/darkThemeTick.json
+    - assets/animation/lightThemeTick.json
 
   fonts:
     - family: Rubik

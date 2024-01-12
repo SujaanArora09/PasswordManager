@@ -57,7 +57,7 @@ class Credentials extends HiveObject {
       jsonData['totpSecret'] == null ? null : jsonData['totpSecret'] as String,
       jsonData['notes'] == null ? null : jsonData['notes'] as String,
       jsonData['uri'] == null ? null : jsonData['uri'] as String,
-      jsonData['folderId'] == null ? "Default" : jsonData['folderId'] as String,
+      jsonData['folderId'] == null ? "All" : jsonData['folderId'] as String,
       DateTime.parse(jsonData['creationDate']),
       DateTime.parse(jsonData['revisionDate']),
       jsonData['favourite'] as bool,
