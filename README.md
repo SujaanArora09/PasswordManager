@@ -1,4 +1,4 @@
-# HeckPass: Your Secure Password Manager
+# password: Your Secure Password Manager
 HeckPass is a feature-rich password manager built with Flutter, designed to provide a seamless and secure experience for managing your passwords and enhancing your online security.
 
 ## Features
@@ -29,6 +29,3 @@ Enhance your privacy with HeckPass's built-in app lock feature. Set up an additi
 ### App Lock
 - Enable the app lock feature in settings to secure HeckPass with an additional password or biometric authentication.
 
-## Installation
-- Download the latest release of HeckPass from the [Releases](https://github.com/HeckCodes/passwordmanager/releases) page.
-- Install the HeckPass APK on your Android device.
